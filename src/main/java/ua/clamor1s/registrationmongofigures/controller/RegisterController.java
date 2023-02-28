@@ -23,4 +23,9 @@ public class RegisterController {
         return service.searchByFullName(fullName);
     }
 
+    @GetMapping("/statistics")
+    public ResponseEntity<?> getMostCommonNames() {
+        return service.getPublicMostCommonNames();
+    }
+
 }

@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
 import ua.clamor1s.registrationmongofigures.dto.FigureDto;
+import ua.clamor1s.registrationmongofigures.dto.NameStatisticDto;
 import ua.clamor1s.registrationmongofigures.repository.FigureRepository;
 
 import java.io.BufferedReader;
@@ -53,6 +54,10 @@ public class RegisterDao {
     public List<FigureDto> getFiguresByFullName(String fullName) {
         return repository.findByFullNameIncludeFullNameAndFullNameEnAndIsPep(fullName)
                 .toList();
+    }
+
+    public List<NameStatisticDto> getTopPublicNames(final int limit) {
+        return repository.getTopPublicNames(limit);
     }
 
     private List<Document> convertJsonStringToDocumentList(String json) {

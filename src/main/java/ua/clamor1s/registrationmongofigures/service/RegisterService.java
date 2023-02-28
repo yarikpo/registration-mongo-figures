@@ -9,4 +9,6 @@ public interface RegisterService {
 
     ResponseEntity<?> searchByFullName(String fullName);
 
+    ResponseEntity<?> getPublicMostCommonNames();
+
 }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ua.clamor1s.registrationmongofigures.dao.RegisterDao;
 import ua.clamor1s.registrationmongofigures.dto.FigureDto;
+import ua.clamor1s.registrationmongofigures.dto.NameStatisticDto;
 
 import java.io.*;
 import java.util.List;
@@ -39,10 +40,17 @@ public class RegisterServiceImpl implements RegisterService {
     @Override
     public ResponseEntity<?> searchByFullName(String fullName) {
         List<FigureDto> figureDtos = dao.getFiguresByFullName(fullName);
-        System.out.println(fullName);
-        System.out.println(figureDtos);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(figureDtos);
+    }
+
+    @Override
+    public ResponseEntity<?> getPublicMostCommonNames() {
+        final int nameLimit = 10;
+        List<NameStatisticDto> topNames = dao.getTopPublicNames(nameLimit);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(topNames);
     }
 
 
