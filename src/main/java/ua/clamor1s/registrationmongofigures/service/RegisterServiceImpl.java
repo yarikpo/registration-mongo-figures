@@ -1,13 +1,15 @@
 package ua.clamor1s.registrationmongofigures.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ua.clamor1s.registrationmongofigures.repository.RegisterRepository;
+import ua.clamor1s.registrationmongofigures.dao.RegisterDao;
+import ua.clamor1s.registrationmongofigures.dto.FigureDto;
 
 import java.io.*;
-import java.util.Scanner;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -15,15 +17,15 @@ import java.util.zip.ZipInputStream;
 public class RegisterServiceImpl implements RegisterService {
 
     @Autowired
-    private RegisterRepository repository;
+    private RegisterDao dao;
 
     @Override
     public ResponseEntity<?> uploadZipToDatabase(MultipartFile file) {
-        repository.clearDatabase();
+        dao.clearDatabase();
         String fileName = file.getOriginalFilename();
         try {
             InputStream is = getJsonFileDataStreamFromZipStream(file.getInputStream());
-            repository.fillDatabaseFromInputStream(is);
+            dao.fillDatabaseFromInputStream(is);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -34,6 +36,14 @@ public class RegisterServiceImpl implements RegisterService {
         return ResponseEntity.ok("oks... file: %s".formatted(fileName));
     }
 
+    @Override
+    public ResponseEntity<?> searchByFullName(String fullName) {
+        List<FigureDto> figureDtos = dao.getFiguresByFullName(fullName);
+        System.out.println(fullName);
+        System.out.println(figureDtos);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(figureDtos);
+    }
 
 
     private InputStream getJsonFileDataStreamFromZipStream(InputStream is) throws IOException {

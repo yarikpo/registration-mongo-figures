@@ -1,12 +1,15 @@
-package ua.clamor1s.registrationmongofigures.repository;
+package ua.clamor1s.registrationmongofigures.dao;
 
 import org.bson.Document;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 import lombok.RequiredArgsConstructor;
+import ua.clamor1s.registrationmongofigures.dto.FigureDto;
+import ua.clamor1s.registrationmongofigures.repository.FigureRepository;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,9 +21,11 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-public class RegisterRepository {
+public class RegisterDao {
 
     private final MongoTemplate mongoTemplate;
+    @Autowired
+    private FigureRepository repository;
 
     public void clearDatabase() {
         mongoTemplate.remove(new Query(), "figures");
@@ -43,6 +48,11 @@ public class RegisterRepository {
 
         List<Document> documentList = convertJsonStringToDocumentList(builder.toString());
         mongoTemplate.insert(documentList, "figures");
+    }
+
+    public List<FigureDto> getFiguresByFullName(String fullName) {
+        return repository.findByFullNameIncludeFullNameAndFullNameEnAndIsPep(fullName)
+                .toList();
     }
 
     private List<Document> convertJsonStringToDocumentList(String json) {

@@ -7,4 +7,6 @@ public interface RegisterService {
 
     ResponseEntity<?> uploadZipToDatabase(MultipartFile file);
 
+    ResponseEntity<?> searchByFullName(String fullName);
+
 }
